@@ -1,0 +1,129 @@
+<html>
+
+<head><title>Self Service BI Tools</title> 
+    <meta charset=utf-8> </head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.js"></script>
+    
+    
+<style>
+    body{
+    margin:0;
+    font-family: sans-serif;
+    }
+    .FL{
+    float: left;
+    }
+    .h10{
+        height: 10%;
+    }
+    .P1{
+    padding: 1em;
+    }
+    .filter{
+        margin-top: 19%;
+        margin-left: 9%;
+    }
+    .header{
+   background-color: #b71d1d;
+    color: white;
+    /* height: 6%; */
+    padding: 15px;
+        font-size: 1.5em;
+    font-family: sans-serif;
+        text-align: center;
+    }
+    .button{
+        background-color: #e0dada;
+    padding: .5em;
+    margin: .5em;
+    }
+    .CP{
+    cursor: pointer;
+    }
+</style>
+    <body>
+    		<div class="header">Self service BI Reporting</div>
+<div class="h10 filter">	
+		<div class="FL h10 P1">
+		<label for="dim">Choose a dimension:</label>
+
+		<select name="Dimension" id="dim">
+		<option value="District">District</option>
+		<option value="Region">Region</option>
+		</select>
+		</div>
+        <div class="FL h10 P1">
+
+		<label for="gran">Choose time granularity:</label>
+
+		<select name="Granularity" id="gran">
+		<option value="Years">Years</option>
+		<option value="Months">Months</option>
+		</select>
+        
+        </div>
+        <div class="FL h10 P1">
+
+		<label for="ReportType">Report Type:</label>
+
+		<select name="RT" id="ReportType">
+		<option value="PPT">PPTX</option>
+		<option value="XLSX">XLSX</option>
+        <option value="PDF">PDF</option>
+		</select>
+        
+        </div>
+        <div class="FL h10 P1">
+
+		<label for="RC">Report Channel:</label>
+
+		<select name="RT" id="RC">
+        <option value="SL">Shared Folder</option>
+		<option value="EM">Email</option>
+		<option value="DW">Download</option>
+		</select>
+        
+        </div>
+        <div id='submit' class="button FL CP">Generate</div>
+    </div>	
+
+    </body>
+<script>
+    var DimValue = "District";
+    var TimePeriod = "Years";
+    function dropdownChange(){
+    $("#dim").change(function(e){
+    DimValue = this.value;
+    });
+    $("#gran").change(function(e){
+    TimePeriod = this.value;
+    });
+        //submit responce passed to python
+     $("#submit").click(function(){
+         var data = { get: [DimValue,TimePeriod]};
+         $.ajax({
+         type: 'POST',
+         url: '/filters/',
+         dataType: "json",
+         contentType: 'application/json;charset=UTF-8',
+         data: JSON.stringify(data),
+         async:false,
+         success: function(response){
+             debugger
+         alert(response.value);
+         console.log("psp")
+         },
+         error:function(error){
+             console.log(error);
+         }
+         });
+        });
+        
+    }
+    
+    //When the DOM element gets ready to load all events 
+    $( document ).ready(function() {
+   dropdownChange();
+});
+</script>
+</html>
